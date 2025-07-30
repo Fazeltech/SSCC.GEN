@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSCC Number Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .clear-btn {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 2px solid #e9ecef;
+        }
+
+        .clear-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .sscc-display {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .history {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .history h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .history-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .timestamp {
+            color: #666;
+            font-size: 0.8em;
+        }
+
+        .info-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .info-section h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info-section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .sscc-display {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SSCC Generator</h1>
+        <p class="subtitle">Generate Serial Shipping Container Codes for logistics tracking</p>
+        
+        <div class="form-group">
+            <label for="companyPrefix">Company Prefix (7-10 digits)</label>
+            <input type="text" id="companyPrefix" placeholder="e.g., 1234567" maxlength="10">
+        </div>
+        
+        <div class="form-group">
+            <label for="extensionDigit">Extension Digit (0-9, optional)</label>
+            <input type="text" id="extensionDigit" placeholder="Default: random" maxlength="1">
+        </div>
+        
+        <div class="button-group">
+            <button class="generate-btn" onclick="generateSSCC()">Generate SSCC</button>
+            <button class="clear-btn" onclick="clearForm()">Clear</button>
+        </div>
+        
+        <div class="result-section" id="resultSection" style="display: none;">
+            <h3>Generated SSCC:</h3>
+            <div class="sscc-display" id="ssccResult"></div>
+            <button class="copy-btn" onclick="copyToClipboard()">Copy to Clipboard</button>
+        </div>
+        
+        <div class="history" id="historySection" style="display: none;">
+            <h3>Recent SSCCs:</h3>
+            <div class="history-list" id="historyList"></div>
+        </div>
+        
+        <div class="info-section">
+            <h3>About SSCC</h3>
+            <p><strong>SSCC (Serial Shipping Container Code)</strong> is an 18-digit code used globally for tracking shipping containers and pallets.</p>
+            <p><strong>Structure:</strong> Extension Digit (1) + Company Prefix (7-10) + Serial Reference (remaining digits) + Check Digit (1)</p>
+            <p><strong>Uses:</strong> Supply chain tracking, inventory management, and logistics automation.</p>
+        </div>
+    </div>
+
+    <script>
+        let ssccHistory = [];
+
+        function generateSSCC() {
+            const companyPrefix = document.getElementById('companyPrefix').value.trim();
+            const extensionDigit = document.getElementById('extensionDigit').value.trim();
+            
+            // Validate company prefix
+            if (!companyPrefix) {
+                alert('Please enter a company prefix');
+                return;
+            }
+            
+            if (!/^\d{7,10}$/.test(companyPrefix)) {
+                alert('Company prefix must be 7-10 digits');
+                return;
+            }
+            
+            // Validate extension digit if provided
+            if (extensionDigit && !/^\d$/.test(extensionDigit)) {
+                alert('Extension digit must be a single digit (0-9)');
+                return;
+            }
+            
+            // Generate SSCC
+            const extension = extensionDigit || Math.floor(Math.random() * 10).toString();
+            const remainingDigits = 17 - extension.length - companyPrefix.length;
+            
+            // Generate serial reference number
+            let serialReference = '';
+            for (let i = 0; i < remainingDigits - 1; i++) {
+                serialReference += Math.floor(Math.random() * 10);
+            }
+            
+            // Create the 17-digit code without check digit
+            const code17 = extension + companyPrefix + serialReference;
+            
+            // Calculate check digit using modulo 10 algorithm
+            const checkDigit = calculateCheckDigit(code17);
+            
+            // Complete SSCC
+            const sscc = code17 + checkDigit;
+            
+            // Display result
+            document.getElementById('ssccResult').textContent = sscc;
+            document.getElementById('resultSection').style.display = 'block';
+            
+            // Add to history
+            addToHistory(sscc);
+        }
+        
+        function calculateCheckDigit(code) {
+            let sum = 0;
+            for (let i = 0; i < code.length; i++) {
+                const digit = parseInt(code[i]);
+                const weight = (i % 2 === 0) ? 3 : 1;
+                sum += digit * weight;
+            }
+            const remainder = sum % 10;
+            return remainder === 0 ? 0 : 10 - remainder;
+        }
+        
+        function addToHistory(sscc) {
+            const timestamp = new Date().toLocaleString();
+            ssccHistory.unshift({ sscc, timestamp });
+            
+            // Keep only last 10 entries
+            if (ssccHistory.length > 10) {
+                ssccHistory = ssccHistory.slice(0, 10);
+            }
+            
+            updateHistoryDisplay();
+        }
+        
+        function updateHistoryDisplay() {
+            const historyList = document.getElementById('historyList');
+            const historySection = document.getElementById('historySection');
+            
+            if (ssccHistory.length === 0) {
+                historySection.style.display = 'none';
+                return;
+            }
+            
+            historyList.innerHTML = ssccHistory.map(item => 
+                `<div class="history-item">
+                    <span>${item.sscc}</span>
+                    <span class="timestamp">${item.timestamp}</span>
+                </div>`
+            ).join('');
+            
+            historySection.style.display = 'block';
+        }
+        
+        async function copyToClipboard() {
+            const sscc = document.getElementById('ssccResult').textContent;
+            try {
+                await navigator.clipboard.writeText(sscc);
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = '#17a2b8';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#28a745';
+                }, 2000);
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = sscc;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('SSCC copied to clipboard!');
+            }
+        }
+        
+        function clearForm() {
+            document.getElementById('companyPrefix').value = '';
+            document.getElementById('extensionDigit').value = '';
+            document.getElementById('resultSection').style.display = 'none';
+        }
+        
+        // Add enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateSSCC();
+            }
+        });
+    </script>
+</body>
+</html>
